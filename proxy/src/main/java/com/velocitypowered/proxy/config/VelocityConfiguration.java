@@ -42,12 +42,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.apache.logging.log4j.LogManager;
@@ -1525,11 +1521,7 @@ public final class VelocityConfiguration implements ProxyConfig {
       this.useSsl = config.getOrElse("use-ssl", true);
       this.maxConcurrentConnections = config.getOrElse("max-concurrent-connections", 10);
 
-      this.proxyId = config.get("proxy-id");
-
-      if (this.proxyId == null || this.proxyId.isEmpty()) {
-        this.proxyId = null;
-      }
+      this.proxyId = UUID.randomUUID().toString().substring(0, 8);
     }
 
     public boolean isEnabled() {
