@@ -1554,7 +1554,7 @@ public final class VelocityConfiguration implements ProxyConfig {
     @Expose
     private boolean enabled;
     @Expose
-    private String host;
+    private List<String> hosts;
     @Expose
     private int port;
     @Expose
@@ -1574,7 +1574,7 @@ public final class VelocityConfiguration implements ProxyConfig {
       }
 
       this.enabled = config.getOrElse("enabled", false);
-      this.host = config.getOrElse("host", "127.0.0.1");
+      this.hosts = config.getOrElse("hosts", List.of("127.0.0.1"));
       this.port = config.getOrElse("port", 6379);
       this.username = config.getOrElse("username", "");
 
@@ -1586,15 +1586,20 @@ public final class VelocityConfiguration implements ProxyConfig {
       this.useSsl = config.getOrElse("use-ssl", true);
       this.maxConcurrentConnections = config.getOrElse("max-concurrent-connections", 10);
 
-      this.proxyId = UUID.randomUUID().toString().substring(0, 8);
+      this.proxyId = config.get("proxy-id");
+
+      if (this.proxyId == null || this.proxyId.isEmpty()) {
+        this.proxyId = null;
+      }
+
     }
 
     public boolean isEnabled() {
       return enabled;
     }
 
-    public String getHost() {
-      return host;
+    public List<String> getHosts() {
+      return hosts;
     }
 
     public int getPort() {
@@ -1625,7 +1630,7 @@ public final class VelocityConfiguration implements ProxyConfig {
     public String toString() {
       return "Redis{"
           + "enabled=" + enabled
-          + ", host=" + host
+          + ", hosts=" + hosts.toString()
           + ", port=" + port
           + ", username=" + username
           // password excluded for security
